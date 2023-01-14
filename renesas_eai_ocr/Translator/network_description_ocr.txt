@@ -1,0 +1,73 @@
++--------------------+---------------------+---------------------+----------------------------+--------------------------------+-----------------------------+
+| Layer Output Index | Function            | Layer Input Indexes | Input Size (C x W x H x D) | Parameter                      | Output size (C x W x H x D) |
++--------------------+---------------------+---------------------+----------------------------+--------------------------------+-----------------------------+
+|         1          | Input               |          0          | 3 x 100 x 100 x 1          | -                              | -                           |
+|                    |                     |                     |                            |                                |                             |
+|         2          | Convolution         |          1          | 3 x 100 x 100 x 1          | Kernel       : 3 x 11 x 11 x 1 | 12 x 24 x 24 x 1            |
+|                    |                     |                     |                            | Stride       : 1 x 4 x 4 x 1   |                             |
+|                    |                     |                     |                            | Padding      : 0 x 4 x 4 x 0   |                             |
+|                    |                     |                     |                            | Output Node  : 12              |                             |
+|                    |                     |                     |                            |                                |                             |
+|         3          | ReLU                |          2          | 6912 ( 12 x 24 x 24 x 1 )  | -                              | 6912                        |
+|                    |                     |                     |                            |                                |                             |
+|         4          | Max Pooling         |          3          | 12 x 24 x 24 x 1           | Kernel       : 1 x 3 x 3 x 1   | 12 x 12 x 12 x 1            |
+|                    |                     |                     |                            | Stride       : 1 x 2 x 2 x 1   |                             |
+|                    |                     |                     |                            | Padding      : 0 x 2 x 2 x 0   |                             |
+|                    |                     |                     |                            |                                |                             |
+|         5          | Batch Normalization |          4          | 12 x 12 x 12 x 1           | Mean         : 12 x 1 x 1 x 1  | 12 x 12 x 12 x 1            |
+|                    |                     |                     |                            | Variance     : 12 x 1 x 1 x 1  |                             |
+|                    |                     |                     |                            | Scale(Gamma) : 12 x 1 x 1 x 1  |                             |
+|                    |                     |                     |                            | Offset(Beta) : 12 x 1 x 1 x 1  |                             |
+|                    |                     |                     |                            | Epsilon      : 1e-05           |                             |
+|                    |                     |                     |                            |                                |                             |
+|         6          | Convolution         |          5          | 12 x 12 x 12 x 1           | Kernel       : 12 x 3 x 3 x 1  | 5 x 12 x 12 x 1             |
+|                    |                     |                     |                            | Stride       : 1 x 1 x 1 x 1   |                             |
+|                    |                     |                     |                            | Padding      : 0 x 2 x 2 x 0   |                             |
+|                    |                     |                     |                            | Output Node  : 5               |                             |
+|                    |                     |                     |                            |                                |                             |
+|         7          | Max Pooling         |          6          | 5 x 12 x 12 x 1            | Kernel       : 1 x 3 x 3 x 1   | 5 x 6 x 6 x 1               |
+|                    |                     |                     |                            | Stride       : 1 x 2 x 2 x 1   |                             |
+|                    |                     |                     |                            | Padding      : 0 x 2 x 2 x 0   |                             |
+|                    |                     |                     |                            |                                |                             |
+|         8          | ReLU6               |          7          | 180 ( 5 x 6 x 6 x 1 )      | -                              | 180                         |
+|                    |                     |                     |                            |                                |                             |
+|         9          | Convolution         |          8          | 5 x 6 x 6 x 1              | Kernel       : 5 x 3 x 3 x 1   | 10 x 6 x 6 x 1              |
+|                    |                     |                     |                            | Stride       : 1 x 1 x 1 x 1   |                             |
+|                    |                     |                     |                            | Padding      : 0 x 2 x 2 x 0   |                             |
+|                    |                     |                     |                            | Output Node  : 10              |                             |
+|                    |                     |                     |                            |                                |                             |
+|         10         | ReLU                |          9          | 360 ( 10 x 6 x 6 x 1 )     | -                              | 360                         |
+|                    |                     |                     |                            |                                |                             |
+|         11         | Convolution         |          10         | 10 x 6 x 6 x 1             | Kernel       : 10 x 3 x 3 x 1  | 7 x 6 x 6 x 1               |
+|                    |                     |                     |                            | Stride       : 1 x 1 x 1 x 1   |                             |
+|                    |                     |                     |                            | Padding      : 0 x 2 x 2 x 0   |                             |
+|                    |                     |                     |                            | Output Node  : 7               |                             |
+|                    |                     |                     |                            |                                |                             |
+|         12         | ReLU                |          11         | 252 ( 7 x 6 x 6 x 1 )      | -                              | 252                         |
+|                    |                     |                     |                            |                                |                             |
+|         13         | Convolution         |          12         | 7 x 6 x 6 x 1              | Kernel       : 7 x 3 x 3 x 1   | 7 x 6 x 6 x 1               |
+|                    |                     |                     |                            | Stride       : 1 x 1 x 1 x 1   |                             |
+|                    |                     |                     |                            | Padding      : 0 x 2 x 2 x 0   |                             |
+|                    |                     |                     |                            | Output Node  : 7               |                             |
+|                    |                     |                     |                            |                                |                             |
+|         14         | ReLU                |          13         | 252 ( 7 x 6 x 6 x 1 )      | -                              | 252                         |
+|                    |                     |                     |                            |                                |                             |
+|         15         | Max Pooling         |          14         | 7 x 6 x 6 x 1              | Kernel       : 1 x 3 x 3 x 1   | 7 x 3 x 3 x 1               |
+|                    |                     |                     |                            | Stride       : 1 x 2 x 2 x 1   |                             |
+|                    |                     |                     |                            | Padding      : 0 x 2 x 2 x 0   |                             |
+|                    |                     |                     |                            |                                |                             |
+|         16         | Full Connect        |          15         | 63 ( 7 x 3 x 3 x 1 )       | Output node : 240              | 240                         |
+|                    |                     |                     |                            |                                |                             |
+|         17         | ReLU                |          16         | 240                        | -                              | 240                         |
+|                    |                     |                     |                            |                                |                             |
+|         18         | Full Connect        |          17         | 240                        | Output node : 50               | 50                          |
+|                    |                     |                     |                            |                                |                             |
+|         19         | ReLU                |          18         | 50                         | -                              | 50                          |
+|                    |                     |                     |                            |                                |                             |
+|         20         | Full Connect        |          19         | 50                         | Output node : 17               | 17                          |
+|                    |                     |                     |                            |                                |                             |
+|         21         | Softmax             |          20         | 17                         | -                              | 17                          |
+|                    |                     |                     |                            |                                |                             |
+|         22         | Output              |          21         | 17 x 1 x 1 x 1             | -                              | -                           |
+|                    |                     |                     |                            |                                |                             |
++--------------------+---------------------+---------------------+----------------------------+--------------------------------+-----------------------------+
